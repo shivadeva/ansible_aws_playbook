@@ -1,29 +1,40 @@
 ---
-
+#aws cli credentials
 aws_access_key: ""
 aws_secret_key: ""
-region: "us-east-1"
+
+#aws region details
+region: "us-east-2"
 
 # VPC
-vpc_cidr: 10.10.0.0/24
-vpc_name: "Ansible VPC3"
+vpc_cidr: 10.5.0.0/16
+vpc_name: "Digitalxc_UAT"
 
-# Subnet
-subnet_name: "Ansible Subnet"
-subnet_cidr: 10.10.0.0/26
+# public Subnet
+subnet_name: "Digitalxc_Public_subnet"
+subnet_cidr: 10.5.1.0/24
 
-igw_name: "Traffic IGW"
+#internet gateway name tag
+igw_name: "Digitalxc_IGW"
 
 
 #route table name
-route_name: "Public Ansible"
+route_name: "Digitalxc_routetable_public"
 
-securitygroup_name: "Ansible Security Group"
+#Security group details
+securitygroup_name: "DigitalXc Security Group"
 
-ec2_tag: "WebServer"
+#vm tag- ec2 instance name tag
+ec2_tag: "Digitalxc_WebServer"
 
 
 #key storage location
-ec2_key_directory: "/home/vagrant/masonfrank/"
-keypair_name: "ansible_key"
+ec2_key_directory: "/tmp/"
+keypair_name: "DigitalXc"
 
+#Amazon machine image id
+ami_id: "ami-09e67e426f25ce0d7"
+
+
+#installing nginx on aws ec2 instance
+user_data: "sudo -i apt-get update -y && sudo -i apt-get install nginx -y"

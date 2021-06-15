@@ -1,6 +1,6 @@
 ---
 
- - name: create VPC
+ - name: creating VPC
    ec2_vpc_net:
      name: "{{ vpc_name }}"
      cidr_block: "{{ vpc_cidr }}"
@@ -11,12 +11,12 @@
    register: vpc
 
 
- - name: Set VPC ID in variable
+ - name: Set up VPC ID in variable for further use case
    set_fact:
      vpc_id: "{{ vpc.vpc.id }}"
 
 
- - name: associate subnet to the VPC
+ - name: associate public subnet to the VPC
    ec2_vpc_subnet:
     state: present
     vpc_id: "{{ vpc_id }}"
@@ -73,6 +73,10 @@
         ports:
         - 22
         cidr_ip: 0.0.0.0/0
+      - proto: HTTPS
+        ports:
+        - 443
+        cidr_ip: 0.0.0.0/0
    register: security_group
 
  - name: create a new ec2 key pair, returns generated private key
@@ -98,15 +102,17 @@
 
  - name: Create EC2 Instance
    ec2:
-    image: ami-467ca739
+    image: "{{ ami_id }}"
     wait: yes
-    instance_type: t2.micro
+    instance_type: t2.medium
     region: "{{ region }}"
     group_id: "{{ security_group.group_id }}"
     vpc_subnet_id: "{{ subnet.subnet.id }}"
+    assign_public_ip: yes
     key_name: "{{ keypair.key.name  }}"
     count_tag: "{{ ec2_tag }}"
     exact_count: 1
+    user_data: "{{ user_data }}"
     aws_access_key: "{{ aws_access_key }}"
     aws_secret_key: "{{ aws_secret_key }}"
 
